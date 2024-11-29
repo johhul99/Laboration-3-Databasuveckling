@@ -441,7 +441,7 @@ async Task AddProductAsync(Product p)
     };
     await dbproducts.InsertOneAsync(pDocument);
     Console.WriteLine($"{p.Name} är nu tillagd i sortimentet!");
-    products.Add(p);
+    await LoadProductsAsync();
 }
 
 async Task RemoveProductAsync(Product p)
@@ -449,7 +449,7 @@ async Task RemoveProductAsync(Product p)
     var filter = Builders<BsonDocument>.Filter.And(Builders<BsonDocument>.Filter.Eq("name", p.Name), Builders<BsonDocument>.Filter.Eq("price", p.Price));
     var result = await dbproducts.DeleteOneAsync(filter);
     Console.WriteLine($"{p.Name} är nu borttagen ur sortimentet");
-    products.Remove(p);
+    await LoadProductsAsync();
 }
 
 async Task LoadProductsAsync()

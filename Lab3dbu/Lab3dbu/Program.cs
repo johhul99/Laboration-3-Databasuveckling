@@ -188,21 +188,40 @@ while (1 == 1) // Så att man kan gå tillbaka till startskärm
                                         Console.WriteLine("Lägg till produkt:");
                                         Console.WriteLine("Namn:");
                                         string name = Console.ReadLine();
-                                        Console.WriteLine("Pris i kronor:");
-                                        try
-                                        {
-                                            double price = Convert.ToDouble(Console.ReadLine());
-                                            Product newProduct = new Product(name, price);
-                                            await AddProductAsync(newProduct);
-                                            Console.WriteLine("Du blir omdirigerad till menyn.");
-                                            Console.ReadKey();
-                                            break;
 
-                                        }
-                                        catch
+                                        if (string.IsNullOrWhiteSpace(name)) //Så att användaren inte lägger in ett produktnamn som exempelvis "    "
                                         {
                                             Console.Clear();
-                                            Console.WriteLine("Vänligen skriv in ett tal, om decimal önskas använd: ,");
+                                            Console.WriteLine("Produktens namn måste innehålla tecken.");
+                                            Console.ReadKey();
+                                        }
+                                        else
+                                        {
+                                            while (1 == 1)
+                                            {
+                                                Console.WriteLine("Pris i kronor:");
+
+                                                try
+                                                {
+                                                    double price = Convert.ToDouble(Console.ReadLine());
+                                                    Product newProduct = new Product(name, price);
+                                                    await AddProductAsync(newProduct);
+                                                    Console.WriteLine("Du blir omdirigerad till menyn.");
+                                                    Console.ReadKey();
+                                                    break;
+
+                                                }
+                                                catch
+                                                {
+                                                    Console.Clear();
+                                                    Console.WriteLine("Vänligen skriv in ett tal, om decimal önskas använd: ,");
+                                                    Console.ReadKey();
+                                                    Console.Clear();
+                                                    Console.WriteLine("Namn:");
+                                                    Console.WriteLine(name);
+                                                }
+                                            }
+                                            break;
                                         }
                                     }
                                 }
@@ -454,8 +473,9 @@ async Task RemoveProductAsync(Product p)
 
 async Task LoadProductsAsync()
 {
+    var productDocuments = await dbproducts.Find(Builders<BsonDocument>.Filter.Empty).ToListAsync();
     products = new List<Product>();
-    foreach (var document in documents)
+    foreach (var document in productDocuments)
     {
         string name = document.GetValue("name").AsString;
         double price = document.GetValue("price").AsDouble;

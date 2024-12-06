@@ -201,7 +201,7 @@ while (1 == 1) // Så att man kan gå tillbaka till startskärm
                                             {
                                                 Console.WriteLine("Pris i kronor:");
 
-                                                try
+                                                try //Så att användaren inte skriver in pris i fel format
                                                 {
                                                     double price = Convert.ToDouble(Console.ReadLine());
                                                     Product newProduct = new Product(name, price);
@@ -231,7 +231,7 @@ while (1 == 1) // Så att man kan gå tillbaka till startskärm
                                     Product.ShowProduct(valuta, products);
                                     Console.WriteLine();
                                     Console.WriteLine("Skriv in siffran framför den produkt du vill ta bort ur sortimentet och tryck enter eller valfri symbol och/eller enter för att gå tillbaka till menyn.");
-                                    try
+                                    try //Ifall användaren vill tillbaka till menyn
                                     {
                                         int i = Convert.ToInt32(Console.ReadLine());
                                         string nameOfProduct = products[i-1].Name;
@@ -451,7 +451,7 @@ void LoadObjects()
     }
 }
 
-async Task AddProductAsync(Product p)
+async Task AddProductAsync(Product p) 
 {    
     var pDocument = new BsonDocument
     {
@@ -471,7 +471,7 @@ async Task RemoveProductAsync(Product p)
     await LoadProductsAsync();
 }
 
-async Task LoadProductsAsync()
+async Task LoadProductsAsync() //Så att listan uppdtares när användaren lagt till eller tagit bort en product
 {
     var productDocuments = await dbproducts.Find(Builders<BsonDocument>.Filter.Empty).ToListAsync();
     products = new List<Product>();
